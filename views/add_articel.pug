@@ -1,0 +1,28 @@
+extends layout
+
+block content
+   .container
+    h1 #{title}
+    form(action="/articles/add", method="post")
+        .form-group
+            label(for="title") Title
+            input.form-control(type="text",name="title",id="title")
+        .form-group
+            label(for="subtitle") SubTitle
+            input.form-control(type="text",name="subtitle",id="subtitle")
+        .form-group
+            label(for="category") category
+            select.form-control(name="category",id="category")
+                each category , i in categories
+                    option(value=category._id) #{category.title}
+        .form-group
+            label(for="author") Author
+            input.form-control(type="text",name="author",id="author")
+        .form-group
+            label(for="body") Body
+            textarea.form-control(name="body",id="body")
+                    
+                
+        input.btn.btn-primary(type="submit", value="Save",name="submit")
+        a.btn.btn-danger(href="/manage/articles") Back
+            
