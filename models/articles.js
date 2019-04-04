@@ -47,7 +47,8 @@ const Article = module.exports = mongoose.model('Article', articleSchema);
 
 module.exports.getArticle = (callback, limit) => {
     Article.find(callback).limit(limit).sort([
-        ['titile', ascending]
+        ['titile', 'ascending']
+
     ])
 }
 
@@ -60,18 +61,19 @@ module.exports.addArticle = (article, callback) => {
 
 //get single Category by id
 
-module.exports.getCategoryById = (id, callback) => {
+module.exports.getArticleById = (id, callback) => {
     Article.findById(id, callback)
 }
 
 //update Category
 
-module.exports.updateCategory = (query, update, options, callback) => {
+module.exports.updateArticle = (query, update, options, callback) => {
     Article.findByIdAndUpdate(query, update, options, callback)
+
 }
 
 //remove Article
 
-module.exports.removeCategory = (query, callback) => {
+module.exports.removeArticle = (query, callback) => {
     Article.remove(query, callback)
 }

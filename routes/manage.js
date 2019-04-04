@@ -1,20 +1,30 @@
-var express = require('express');
-var manageRouter = express.Router();
-let mongoose = require('mongoose');
-
+const express = require('express');
+const manageRouter = express.Router();
+const mongoose = require('mongoose');
+const Article = require('../models/articles');
 require('../models/category');
 let categorySchema = mongoose.model('Category')
 
 manageRouter.get('/articles', (req, res, next) => {
-    res.render('manage_articels', {
-        title: 'Manage Articels'
-    });
+    Article.getArticle((err, articles) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.render('manage_articels', {
+                title: 'Manage Articels',
+                articles: articles
+            });
+
+        }
+    })
+
+
 });
 
 manageRouter.get('/categories', (req, res, next) => {
     categorySchema.find({}, (err, data) => {
         if (!err) {
-            console.log(data);
+            // console.log(data);
             res.render('manage_categories', {
                 categories: data
             });
@@ -38,7 +48,7 @@ manageRouter.get('/articles/add', (req, res) => {
 
         } else {
             // console.log(data);
-            res.render('add_articel', {
+            res.render('add_article', {
                 title: 'create Articel',
                 categories: data
             })
@@ -57,9 +67,22 @@ manageRouter.get('/categories/add', (req, res) => {
 })
 
 manageRouter.get('/articels/edit/:id', (req, res, next) => {
-    res.render('edit_article', {
-        title: 'Edit Article'
-    });
+    Article.getArticleById(req.params.id, (err, article) => {
+        // console.log(article)
+        if (err) {
+            res.send(err)
+        } else {
+            categorySchema.find({}, (err, categories) => {
+                res.render('edit_article', {
+                    title: 'Edit Article',
+                    article: article,
+                    categories: categories
+                });
+            })
+
+        }
+    })
+
 });
 
 manageRouter.get('/categories/edit/:id', (req, res, next) => {

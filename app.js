@@ -35,6 +35,10 @@ mongoose.connection.on("error", (err) => {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+//moment
+
+app.locals.moment = require('moment')
+
 // app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -43,12 +47,25 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+//express session 
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}))
+
+
+
+
 //Express messages
 app.use(flash());
 app.use((req, res, next) => {
+
   res.locals.messages = require('express-messages')(req, res);
+
   next();
 });
+
 
 //Express Validator 
 

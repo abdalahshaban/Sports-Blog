@@ -25,41 +25,71 @@ categoriesRouter.get('/', (req, res, next) => {
 
 //add category//
 categoriesRouter.post('/add', (req, res) => {
-    let category = new categorySchema({
-        title: req.body.title,
-        description: req.body.description
-    })
-    category.save((err, data) => {
-        if (!err) {
-            res.redirect('/manage/categories')
-        } else {
-            res.send(err)
-        }
-    })
+    req.checkBody('title', 'Title is Required').notEmpty();
+    req.checkBody('description', 'description is required').notEmpty();
+
+    let errors = req.validationErrors();
+
+    if (errors) {
+        res.render('add_category', {
+            errors: errors,
+            title: 'Create Category'
+        })
+    } else {
+        let category = new categorySchema({
+            title: req.body.title,
+            description: req.body.description
+        })
+        category.save((err, data) => {
+            if (!err) {
+                req.flash('success', 'Category Saved')
+                res.redirect('/manage/categories')
+            } else {
+                res.send(err)
+            }
+        })
+
+    }
+
+
 });
 
 
 //edit category post
 
 categoriesRouter.post('/edit/:id', (req, res) => {
-    categorySchema.findOneAndUpdate({
-        _id: req.params.id
-    }, {
-        $set: {
-            title: req.body.title,
-            description: req.body.description
-        }
-    }, {
-        new: true
-    }, (err, data) => {
-        if (!err) {
-            res.sendStatus(200)
-            res.redirect('/manage/categories')
-        } else {
-            res.send(err)
+    req.checkBody('title', 'Title is Required').notEmpty();
+    req.checkBody('description', 'description is required').notEmpty();
 
-        }
-    })
+    let errors = req.validationErrors();
+
+    if (errors) {
+        res.render('edit_category', {
+            errors: errors,
+            title: 'Create Category'
+        })
+    } else {
+        categorySchema.findOneAndUpdate({
+            _id: req.params.id
+        }, {
+            $set: {
+                title: req.body.title,
+                description: req.body.description
+            }
+        }, {
+            new: true
+        }, (err, data) => {
+            if (!err) {
+                res.sendStatus(200)
+                res.redirect('/manage/categories')
+            } else {
+                res.send(err)
+
+            }
+        })
+    }
+
+
 });
 
 

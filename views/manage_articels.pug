@@ -1,4 +1,28 @@
 extends layout
 
 block content
-    h1 #{title}
+  .container
+    .row
+      .col-md-9
+        h1 #{title}
+      .col-md-3.mb-2
+        a(href="/manage/articles/add",class="btn btn-primary") Add articles
+    table(class="table table-hover table-striped")
+      tr
+        th Articles Title
+        th Date Published
+        th Author
+        th
+        each val , i in articles
+          tr
+            td #{val.title}
+            td #{moment(val.created_at).format('LLLL')}
+            //- MMMM Do YYYY, h:mm:ss a
+            td #{val.author}
+            td 
+             a(class="btn btn-success",href="/manage/articels/edit/"+val._id) Edit
+             a.btn.btn-danger.article-delete(href="/manage/articles",data-id=val._id) Delete
+            
+             
+                
+        
