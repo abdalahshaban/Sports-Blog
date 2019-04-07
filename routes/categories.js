@@ -81,6 +81,7 @@ categoriesRouter.post('/edit/:id', (req, res) => {
         }, (err, data) => {
             if (!err) {
                 res.sendStatus(200)
+                req.flash('success', 'Category updated')
                 res.redirect('/manage/categories')
             } else {
                 res.send(err)
@@ -102,6 +103,7 @@ categoriesRouter.delete('/delete/:id', (req, res) => {
     }, (err, data) => {
         if (!err) {
             res.sendStatus(200)
+            req.flash('error', 'Category deleted')
         } else {
             res.send(err)
         }

@@ -1,12 +1,8 @@
 extends layout
 
 block content
-    //- h1 #{title}
-    .jumbotron.showcase
-        .container
-            h1 SportsBlog
-            p.lead A Simple And Clean Sports Based Blog
-    .container
+    h1 #{title}
+     .container
         .row
             .col-md-12
                 each article , i in articles
@@ -17,3 +13,4 @@ block content
                         |posted by #{article.author}
                         |on #{moment(article.created_at).format('LLLL')}
                         hr
+

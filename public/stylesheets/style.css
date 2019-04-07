@@ -6,3 +6,50 @@ body {
 a {
   color: #00B7FF;
 }
+
+#messages {
+  margin: 10px;
+}
+
+#messages ul {
+  margin: 0;
+  padding: 0;
+}
+
+#messages li {
+  list-style: none;
+  padding: 10px
+}
+
+#messages {
+  color: white;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 40px;
+}
+
+#messages .success {
+  background: green;
+  /* color: white;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 40px; */
+}
+
+#messages .error {
+  background: red;
+  /* color: white; */
+}
+
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+
+}
+
+.showcase {
+  background: url('/img/home-bg.jpg') no-repeat 0 -150px;
+  min-height: 300px;
+  width: 100%;
+  color: white;
+}

@@ -75,5 +75,28 @@ module.exports.updateArticle = (query, update, options, callback) => {
 //remove Article
 
 module.exports.removeArticle = (query, callback) => {
+
     Article.remove(query, callback)
+
+}
+
+//get article by category
+module.exports.getCategoryArticle = ((categoryId, callback) => {
+    let query = {
+        category: categoryId
+    }
+    Article.find(query, callback).sort([
+        ['title', 'ascending']
+    ])
+})
+
+
+
+///add comment
+module.exports.addComment = (query, comment, callback) => {
+    Article.update(query, {
+        $push: {
+            comments: comment
+        }
+    }, callback)
 }

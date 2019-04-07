@@ -7,23 +7,38 @@ let categorySchema = mongoose.model('Category')
 const Article = require('../models/articles');
 
 articlesRouter.get("/", (req, res, next) => {
-  // res.send('articles');
-  res.render("articels", {
-    title: "Articels"
-  });
+  Article.getArticle((err, articles) => {
+    res.render('articles', {
+      title: 'articles',
+      articles: articles
+    });
+  }, 2)
 });
 
 articlesRouter.get("/show/:id", (req, res, next) => {
-  res.render("articel", {
-    title: "Articel"
-  });
+  Article.getArticleById(req.params.id, (err, article) => {
+    res.render("article", {
+      title: "Articel",
+      article: article
+    });
+  })
+
 });
 
 
 articlesRouter.get("/category/:category_id", (req, res, next) => {
-  res.render("articels", {
-    title: "Category Articles"
-  });
+  Article.getCategoryArticle(
+    req.params.category_id, (err, articles) => {
+      // console.log(articles);
+      categorySchema.findById(req.params.category_id, (err, category) => {
+        res.render("articles", {
+          title: category.title + "  Category Articles",
+          articles: articles
+        });
+      })
+
+    })
+
 });
 
 
@@ -61,7 +76,7 @@ articlesRouter.post('/add', (req, res) => {
     Article.addArticle(articel, (err, artical) => {
       if (!err) {
         // console.log(artical);
-
+        req.flash('success', 'article added')
         res.redirect('/manage/articles')
       } else {
         res.send(err)
@@ -93,7 +108,8 @@ articlesRouter.post('/edit/:id', (req, res) => {
     if (err) {
       res.send(err)
     } else {
-      console.log(articel)
+      // console.log(articel)
+      req.flash('success', 'Article Updated')
       res.redirect('/manage/articles')
     }
   })
@@ -108,13 +124,53 @@ articlesRouter.delete('/delete/:id', (req, res) => {
     if (err) {
       res.send(err)
     } else {
-      console.log(data)
+      // console.log(data)
+
       res.redirect('/manage/articles')
+      // req.flash('error', 'Article deleted')
       // res.status(200)
     }
   })
 })
 
+articlesRouter.post('/comments/add/:id', (req, res) => {
+  req.checkBody('comment_subject', "Subject is required").notEmpty();
+  req.checkBody('comment_author', "Author is required").notEmpty();
+  req.checkBody('comment_body', "body is required").notEmpty();
+
+  let errors = req.validationErrors();
+
+  if (errors) {
+    Article.getArticleById(req.params.id, (err, article) => {
+      res.render('article', {
+        title: 'Article',
+        article: article,
+        errors: errors
+      })
+    })
+  } else {
+    let article = new Article();
+    let query = {
+      _id: req.params.id
+    }
+
+    let comment = {
+      comment_subject: req.body.comment_subject,
+      comment_author: req.body.comment_author,
+      comment_body: req.body.comment_body,
+      comment_email: req.body.comment_email
+    }
+
+    Article.addComment(query, comment, (err, article) => {
+      res.redirect('/articles/show/' + req.params.id)
+    })
+
+  }
+
+
+
+
+})
 
 
 
